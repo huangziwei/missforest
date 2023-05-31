@@ -108,7 +108,10 @@ class MissForest:
                             X_copy[col].map(self.cat_mapping[col]).astype("category")
                         )
         else:
-            X_copies = X_copies_num
+            X_copies = [
+                pd.DataFrame(X_copy_num, columns=self.num_cols)
+                for X_copy_num in X_copies_num
+            ]
 
         return X_copies
 
