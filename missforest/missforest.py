@@ -86,25 +86,29 @@ class MissForest:
                 for imputer in self.iter_imputers_cat
             ]
 
-        # Combine the imputed dataframes
-        X_copies = [
-            pd.concat(
-                [
-                    pd.DataFrame(X_copy_num, columns=self.num_cols),
-                    pd.DataFrame(X_copy_cat, columns=self.cat_cols).astype("category"),
-                ],
-                axis=1,
-            )
-            for X_copy_num, X_copy_cat in zip(X_copies_num, X_copies_cat)
-        ]
+            # Combine the imputed dataframes
+            X_copies = [
+                pd.concat(
+                    [
+                        pd.DataFrame(X_copy_num, columns=self.num_cols),
+                        pd.DataFrame(X_copy_cat, columns=self.cat_cols).astype(
+                            "category"
+                        ),
+                    ],
+                    axis=1,
+                )
+                for X_copy_num, X_copy_cat in zip(X_copies_num, X_copies_cat)
+            ]
 
-        if self.keep_categorical:
-            # Convert the imputed values back to categories
-            for X_copy in X_copies:
-                for i, col in enumerate(self.cat_cols):
-                    X_copy[col] = (
-                        X_copy[col].map(self.cat_mapping[col]).astype("category")
-                    )
+            if self.keep_categorical:
+                # Convert the imputed values back to categories
+                for X_copy in X_copies:
+                    for i, col in enumerate(self.cat_cols):
+                        X_copy[col] = (
+                            X_copy[col].map(self.cat_mapping[col]).astype("category")
+                        )
+        else:
+            X_copies = X_copies_num
 
         return X_copies
 
